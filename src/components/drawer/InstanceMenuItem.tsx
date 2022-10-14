@@ -24,6 +24,11 @@ export default function InstanceMenuItem(props: IInstanceMenuItemProps) {
   const codes = useAtomValue(selectCodesMetadata(chainId));
   const codeName = convertCodeIdToCodeName(instance.contractCode.codeId.toString(), codes);
   const navigate = useNavigate();
+
+  const copyInstanceAddress = () => {
+    navigator.clipboard.writeText(instance.contractAddress);
+  }
+
   return (
     <T1MenuItem
       label={instance.contractAddress}
@@ -31,12 +36,18 @@ export default function InstanceMenuItem(props: IInstanceMenuItemProps) {
       link={`/chains/${chainId}/instances/${instance.contractAddress}`}
       textEllipsis
       tooltip={`${codeName} ${instance.contractAddress}`}
-      options={[
+      options={({close}) => [
         <MenuItem
           key="delete-instance"
           onClick={() => {
             setShowDeleteInstance(true);
           }}>Delete</MenuItem>,
+        <MenuItem
+          key="copy-instance-address"
+          onClick={() => {
+            copyInstanceAddress();
+            close();
+          }}>Copy Address</MenuItem>
       ]}
       optionsExtras={({close}) => [
         <DeleteInstanceDialog
